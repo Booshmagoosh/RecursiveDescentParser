@@ -88,7 +88,7 @@ int assignment(string input) {
     string::size_type idx = input.find('=');
     const string substring{ input.substr(0, idx) };
     if (!isValidName(substring)) {
-        throw std::invalid_argument("Error, invalid variable name");
+        throw std::invalid_argument("Error: invalid variable name");
     }
     return idTable[substring] = 
         expression(input.substr(idx + 1, input.size() - idx));
