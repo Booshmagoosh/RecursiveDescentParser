@@ -38,6 +38,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <algorithm>
 
 using std::string, std::cout, std::getline, std::cin, std::stoi, std::map;
 
@@ -94,8 +95,6 @@ int assignment(string input) {
 }
 
 int expression(string input) {
-    // E -> ( E )
-    // E -> T
     if (input[0] == '(' && input[input.size() - 1] == ')') {
         return expression(input.substr(1, input.size() - 2));
     }
@@ -104,14 +103,8 @@ int expression(string input) {
 }
 
 int term(string input) {
-    // T -> E + E
-    // T -> E - E
-    // T -> F
-    //if(input[0] == '(') {
-        // () +- ___
     string::size_type idx = input.size() - 1;
     for(unsigned count = 0; idx < input.size(); --idx) {
-        //cout << "'" << input[idx] << "', " << count << "\n";
         if(input[idx] == '(') {
             --count;
         }
@@ -129,9 +122,6 @@ int term(string input) {
 }
 
 int factor (string input){
-    // F -> T * T
-    // F -> T / T
-    // F -> V
     string::size_type idx = input.size() - 1;
     for (unsigned count = 0; idx < input.size(); --idx) {
         //cout << "'" << input[idx] << "', " << count << "\n";
@@ -150,8 +140,6 @@ int factor (string input){
 }
 
 int value(string input) {
-    // V -> id
-    // V -> const
     if (input[0] == '(' && input[input.size() - 1] == ')') {
         return expression(input.substr(1, input.size() - 2));
     }
