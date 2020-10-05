@@ -15,8 +15,8 @@
 //Grammar:
 // S = statement, E = expression, A = assignment, T = term,
 // F = factor, V = value, id = id
-//    S -> E
-//    S -> A
+//    S -> E;
+//    S -> A;
 //    A -> id = E
 //    E -> ( E )
 //    E -> T
@@ -41,7 +41,7 @@
 #include <map>
 #include <algorithm>
 
-using std::string;
+using std::string, std::invalid_argument;
 
 int statement(string input);
 int assignment(string input);
@@ -55,43 +55,77 @@ bool isValidName(string input);
 std::map<string, int> idTable;
 
 int main(int argc, char* argv[]) {
-    using std::cout;
+    using std::cout, std::cin, std::getline;
 
-    string input;
-    cout << ">";
-    std::getline(std::cin, input);
-    while (!std::cin.eof()) {
-        input.erase(remove(input.begin(), input.end(), ' '), input.end());
+    if(argc == 2) {
+        // Get input
+        const char* FILE_PATH = argv[1];
+        std::ifstream srcFile;
+        srcFile.open(FILE_PATH);
+        string input, line;
+        if(srcFile.is_open()) {
+            while(getline(srcFile, line)){
+                input += line;
+            }
+        } else {
+            cout << "Unable to read file";
+        }
+
+        // Parse input
         try {
-            int result = statement(input);
-            cout << result << "\n>";
+                int result = statement(input);
+                cout << result;
+            }
+            catch (char* e) {
+                cout << e;
+            }
+            catch (invalid_argument &e) {
+                cout << e.what();
+            }
+            catch (...) {
+                cout << "Error: Invalid input\n";
+            }
+    }
+    else {
+        string input;
+        cout << ">";
+        getline(cin, input);
+        while (!cin.eof()) {
+            input.erase(remove(input.begin(), input.end(), ' '), input.end());
+            try {
+                int result = statement(input);
+                cout << result << "\n>";
+            }
+            catch (char* e) {
+                cout << e << "\n>";
+            }
+            catch (invalid_argument &e) {
+                cout << e.what() << "\n>";
+            }
+            catch (...) {
+                cout << "Error: Invalid input\n>";
+            }
+            getline(cin, input);
         }
-        catch (char* e) {
-            cout << e << "\n";
-        }
-        catch (std::invalid_argument &e) {
-            cout << e.what() << "\n";
-        }
-        catch (...) {
-            cout << "Error: Invalid input\n";
-        }
-        std::getline(std::cin, input);
     }
 }
 
 int statement(string input) {
-    string::size_type idx = input.find('=');
-    if (idx == string::npos) 
-        return expression(input);
+    const auto endOfStatmentIdx = input.find(';');
+    if (endOfStatmentIdx == string::npos) {
+        throw invalid_argument("Error: invalid statment, statement must end with ';'");
+    }
+    if (input.find('=') == string::npos) 
+        return expression(input.substr(0, endOfStatmentIdx));
     
-    return assignment(input);
+    return assignment(input.substr(0, endOfStatmentIdx));
 }
 
 int assignment(string input) {
     string::size_type idx = input.find('=');
     const string substring{ input.substr(0, idx) };
     if (!isValidName(substring)) {
-        throw std::invalid_argument("Error: invalid variable name");
+        throw invalid_argument("Error: invalid variable name");
     }
     return idTable[substring] = 
         expression(input.substr(idx + 1, input.size() - idx));
