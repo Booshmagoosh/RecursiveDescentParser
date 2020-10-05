@@ -7,7 +7,7 @@
 
     Don't use eval or a similar built-in parser.
 
-    For example, given '-1 + (2 + 3)', you should return 4.
+    For example, given '-1 + (2 + 3);', you should return 4.
 */
 
 
@@ -31,9 +31,6 @@
 //                               | const
 //    id                        -> const
     
-
-
-// test deploy script to godblot
 
 #include <iostream>
 #include <fstream>
