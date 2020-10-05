@@ -4,3 +4,4 @@ RecursiveDescentParser*
 *.template
 *.sh
 *.exe
+.vscode*
