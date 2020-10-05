@@ -35,12 +35,13 @@
 
 // test deploy script to godblot
 
-#include <string>
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <map>
 #include <algorithm>
 
-using std::string, std::cout, std::getline, std::cin, std::stoi, std::map;
+using std::string;
 
 int statement(string input);
 int assignment(string input);
@@ -51,13 +52,15 @@ int value(string input);
 int id(string input);
 bool isValidName(string input);
 
-map<string, int> idTable;
+std::map<string, int> idTable;
 
-int main() {
+int main(int argc, char* argv[]) {
+    using std::cout;
+
     string input;
     cout << ">";
-    getline(cin, input);
-    while (!cin.eof()) {
+    std::getline(std::cin, input);
+    while (!std::cin.eof()) {
         input.erase(remove(input.begin(), input.end(), ' '), input.end());
         try {
             int result = statement(input);
@@ -72,7 +75,7 @@ int main() {
         catch (...) {
             cout << "Error: Invalid input\n";
         }
-        getline(cin, input);
+        std::getline(std::cin, input);
     }
 }
 
@@ -124,7 +127,6 @@ int term(string input) {
 int factor (string input){
     string::size_type idx = input.size() - 1;
     for (unsigned count = 0; idx < input.size(); --idx) {
-        //cout << "'" << input[idx] << "', " << count << "\n";
         if (input[idx] == '(')
             --count;
         else if (input[idx] == ')')
