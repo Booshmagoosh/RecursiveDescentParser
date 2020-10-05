@@ -13,23 +13,23 @@
 
 
 //Grammar:
-// S = statement, E = expression, A = assignment, T = term,
-// F = factor, V = value, id = id
-//    S -> E;
-//    S -> A;
-//    A -> id = E
-//    E -> ( E )
-//    E -> T
-//    T -> E + F
-//    T -> E - F
-//    T -> F
-//    F -> T * V
-//    F -> T / V
-//    F -> V
-//    V -> ( E )
-//    V -> id
-//    V -> const
-//    id -> const
+//    <Statements>              -> <Statement>
+//                               | <Statement><Statements>
+//    <Statement>               -> <Expression>;
+//                               | <Assignment Statement>;
+//    <Assignment Statement>    -> id = <Expression>
+//    <Expression>              -> ( <Expression> )
+//                               | <Term>
+//    <Term>                    -> <Expression> + <Factor>
+//                               | <Expression> - <Factor>
+//                               | <Factor>
+//    <Factor>                  -> <Term> * <Value>
+//                               | <Term> / <Value>
+//                               | <Value>
+//    <Value>                   -> ( <Expression> )
+//                               | id
+//                               | const
+//    id                        -> const
     
 
 
@@ -43,6 +43,7 @@
 
 using std::string, std::invalid_argument;
 
+int statements(string input);
 int statement(string input);
 int assignment(string input);
 int expression(string input);
@@ -109,6 +110,8 @@ int main(int argc, char* argv[]) {
         }
     }
 }
+
+
 
 int statement(string input) {
     const auto endOfStatmentIdx = input.find(';');
