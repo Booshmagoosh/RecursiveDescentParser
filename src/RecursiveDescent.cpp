@@ -8,29 +8,28 @@
     Don't use eval or a similar built-in parser.
 
     For example, given '-1 + (2 + 3);', you should return 4.
-*/
 
-
-
-//Grammar:
-//    <Statements>              -> <Statement>
-//                               | <Statement><Statements>
-//    <Statement>               -> <Expression>;
-//                               | <Assignment Statement>;
-//    <Assignment Statement>    -> id = <Expression>
-//    <Expression>              -> ( <Expression> )
-//                               | <Term>
-//    <Term>                    -> <Expression> + <Factor>
-//                               | <Expression> - <Factor>
-//                               | <Factor>
-//    <Factor>                  -> <Term> * <Value>
-//                               | <Term> / <Value>
-//                               | <Value>
-//    <Value>                   -> ( <Expression> )
-//                               | id
-//                               | const
-//    id                        -> const
+Grammar:
+   <Statements>              -> <Statement>
+                              | <Statement><Statements>
+   <Statement>               -> <Expression>;
+                              | <Assignment Statement>;
+   <Assignment Statement>    -> id = <Expression>
+   <Expression>              -> ( <Expression> )
+                              | <Term>
+   <Term>                    -> <Expression> + <Factor>
+                              | <Expression> - <Factor>
+                              | <Factor>
+   <Factor>                  -> <Term> * <Value>
+                              | <Term> / <Value>
+                              | <Value>
+   <Value>                   -> ( <Expression> )
+                              | id
+                              | const
+   id                        -> const
     
+    
+*/
 
 #include <iostream>
 #include <fstream>
