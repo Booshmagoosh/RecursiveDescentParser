@@ -41,9 +41,9 @@
 #include <map>
 #include <algorithm>
 
-using std::string, std::invalid_argument;
+using std::cout, std::string, std::invalid_argument;
 
-int statements(string input);
+void statements(string input);
 int statement(string input);
 int assignment(string input);
 int expression(string input);
@@ -56,7 +56,7 @@ bool isValidName(string input);
 std::map<string, int> idTable;
 
 int main(int argc, char* argv[]) {
-    using std::cout, std::cin, std::getline;
+    using std::cin, std::getline;
 
     if(argc == 2) {
         // Get input
@@ -74,8 +74,7 @@ int main(int argc, char* argv[]) {
 
         // Parse input
         try {
-                int result = statement(input);
-                cout << result;
+                statements(input);
             }
             catch (char* e) {
                 cout << e;
@@ -94,8 +93,8 @@ int main(int argc, char* argv[]) {
         while (!cin.eof()) {
             input.erase(remove(input.begin(), input.end(), ' '), input.end());
             try {
-                int result = statement(input);
-                cout << result << "\n>";
+                statements(input);
+                cout << '>';
             }
             catch (char* e) {
                 cout << e << "\n>";
@@ -111,7 +110,16 @@ int main(int argc, char* argv[]) {
     }
 }
 
-
+void statements(string input) {
+    if(input.empty())
+        return;
+    const auto endOfStatmentIdx = input.find(';');
+    if (endOfStatmentIdx == string::npos) {
+        throw invalid_argument("Error: invalid statments, each statement must end with ';'");
+    }
+    cout << statement(input.substr(0, endOfStatmentIdx + 1)) << "\n";
+    statements(input.substr(endOfStatmentIdx + 1));
+}
 
 int statement(string input) {
     const auto endOfStatmentIdx = input.find(';');
