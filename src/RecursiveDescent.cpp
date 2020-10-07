@@ -36,22 +36,27 @@ Grammar:
 #include <map>
 #include <algorithm>
 
+#include "Value.h"
+#include "Type.h"
+
 using std::cout, std::string, std::invalid_argument;
 
 void statements(string input);
-int statement(string input);
-int assignment(string input);
-int expression(string input);
-int term(string input);
-int factor (string input);
-int value(string input);
-int id(string input);
+Value statement(string input);
+Value assignment(string input);
+Value expression(string input);
+Value term(string input);
+Value factor (string input);
+Value value(string input);
+Value id(string input);
 bool isValidName(string input);
 
-std::map<string, int> idTable;
+std::map<string, Value> idTable;
 
 int main(int argc, char* argv[]) {
     using std::cin, std::getline;
+
+    free(nullptr);
 
     if(argc == 2) {
         // Get input
@@ -66,6 +71,9 @@ int main(int argc, char* argv[]) {
         } else {
             cout << "Unable to read file";
         }
+
+        // Remove spaces from input
+        input.erase(remove(input.begin(), input.end(), ' '), input.end());
 
         // Parse input
         try {
@@ -112,11 +120,11 @@ void statements(string input) {
     if (endOfStatmentIdx == string::npos) {
         throw invalid_argument("Error: invalid statments, each statement must end with ';'");
     }
-    cout << statement(input.substr(0, endOfStatmentIdx + 1)) << "\n";
+    cout << statement(input.substr(0, endOfStatmentIdx + 1)).toString() << '\n';
     statements(input.substr(endOfStatmentIdx + 1));
 }
 
-int statement(string input) {
+Value statement(string input) {
     const auto endOfStatmentIdx = input.find(';');
     if (endOfStatmentIdx == string::npos) {
         throw invalid_argument("Error: invalid statment, statement must end with ';'");
@@ -127,7 +135,7 @@ int statement(string input) {
     return assignment(input.substr(0, endOfStatmentIdx));
 }
 
-int assignment(string input) {
+Value assignment(string input) {
     string::size_type idx = input.find('=');
     const string substring{ input.substr(0, idx) };
     if (!isValidName(substring)) {
@@ -137,15 +145,14 @@ int assignment(string input) {
         expression(input.substr(idx + 1, input.size() - idx));
 }
 
-int expression(string input) {
+Value expression(string input) {
     if (input[0] == '(' && input[input.size() - 1] == ')') {
         return expression(input.substr(1, input.size() - 2));
     }
     return term(input);
-    
 }
 
-int term(string input) {
+Value term(string input) {
     string::size_type idx = input.size() - 1;
     for(unsigned count = 0; idx < input.size(); --idx) {
         if(input[idx] == '(') {
@@ -156,15 +163,17 @@ int term(string input) {
         }
         else if(input[idx] == '+' && count == 0) {
             return expression(input.substr(0, idx)) + factor(input.substr(idx + 1, input.size() - idx - 1));
+            break;
         }
         else if(input[idx] == '-' && count == 0) {
             return expression(input.substr(0, idx)) - factor(input.substr(idx + 1, input.size() - idx - 1));
+            break;
         }
     }
     return factor(input);
 }
 
-int factor (string input){
+Value factor (string input){
     string::size_type idx = input.size() - 1;
     for (unsigned count = 0; idx < input.size(); --idx) {
         if (input[idx] == '(')
@@ -181,7 +190,7 @@ int factor (string input){
     return value(input);
 }
 
-int value(string input) {
+Value value(string input) {
     if (input[0] == '(' && input[input.size() - 1] == ')') {
         return expression(input.substr(1, input.size() - 2));
     }
@@ -191,7 +200,7 @@ int value(string input) {
     return id(input);
 }
 
-int id(string input) {
+Value id(string input) {
     return idTable[input];
 }
 
