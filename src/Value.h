@@ -7,19 +7,19 @@
 #include "Type.h"
 
 struct Value {
-	int type = Type::Number;
+	int type = Type::Float;
 	void* data = nullptr;
 
 	Value() = default;
 
 	Value(int number) {
-		this->type = Type::Number;
+		this->type = Type::Float;
 		this->data = new float;
 		*(float*)this->data = static_cast<float>(number);
 	}
 
 	Value(float number) {
-		this->type = Type::Number;
+		this->type = Type::Float;
 		this->data = new float;
 		*(float*)this->data = number;
 	}
@@ -48,7 +48,7 @@ struct Value {
 		Value result;
 		result.type = value.type;
 		switch(value.type) {
-			case Type::Number:
+			case Type::Float:
 				result.data = new float;
 				*(float*)result.data = *(float*)this->data + *(float*)value.data;
 				break;
@@ -60,7 +60,7 @@ struct Value {
 		Value result;
 		result.type = value.type;
 		switch(value.type) {
-			case Type::Number:
+			case Type::Float:
 				result.data = new float;
 				*(float*)result.data = *(float*)this->data - *(float*)value.data;
 				break;
@@ -72,7 +72,7 @@ struct Value {
 		Value result;
 		result.type = value.type;
 		switch(value.type) {
-			case Type::Number:
+			case Type::Float:
 				result.data = new float;
 				*(float*)result.data = *(float*)this->data * *(float*)value.data;
 				break;
@@ -84,7 +84,7 @@ struct Value {
 		Value result;
 		result.type = value.type;
 		switch(value.type) {
-			case Type::Number:
+			case Type::Float:
 				result.data = new float;
 				*(float*)result.data = *(float*)this->data / *(float*)value.data;
 				break;
@@ -95,7 +95,7 @@ struct Value {
 	std::string toString() {
 		switch (this->type)
 		{
-		case Type::Number:
+		case Type::Float:
 			return std::to_string(*(float*)this->data);
 		}
 		return "null";

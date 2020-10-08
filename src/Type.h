@@ -2,7 +2,7 @@
 #define TYPES_H
 
 enum Type {
-    Number
+    Float
 };
 
 #endif // TYPES_H
