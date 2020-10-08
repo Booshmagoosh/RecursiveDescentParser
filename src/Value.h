@@ -1,3 +1,6 @@
+// File: Value.h
+// Author(s): Adam Jeniski
+
 #ifndef VALUE_H
 #define VALUE_H
 
